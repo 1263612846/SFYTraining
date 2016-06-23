@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<constant name="struts.enable.DynamicMethodInvocation" value="true" />
+	<package name="sfy" extends="struts-default,json-default">
+
+		<action name="login" class="com.sfy.action.LoginAction">
+			<result name="success">Success.jsp</result>
+			<result name="fail">Fail.jsp</result>
+			<result name="info">Info.jsp</result>
+			<result name="edit">Edit.jsp</result>
+			<result name="result">Result.jsp</result>
+			<result name="password">Password.jsp</result>
+			<result name="list">List.jsp</result>
+		</action>
+		
+		<action name="student" class="com.sfy.action.StudentAction">
+			<result type="json">
+				<param name="root">json</param>
+			</result>
+		</action>
+
+	</package>
+</struts>

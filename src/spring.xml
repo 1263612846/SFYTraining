@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" 
+	"http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+
+	<!-- IoC -->
+
+	<bean id="loginAction" class="com.sfy.action.LoginAction">
+		<property name="loginService">
+			<ref bean="loginService" />
+		</property>
+	</bean>
+
+	<bean id="loginService" parent="transactionInterceptor">
+		<property name="target">
+			<bean class="com.sfy.serviceimp.LoginServiceImp">
+				<property name="loginDao">
+					<ref bean="loginDao" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="loginDao" class="com.sfy.daoimp.LoginDaoImp">
+		<property name="jdbcTemplate">
+			<ref bean="jdbcTemplate" />
+		</property>
+	</bean>
+
+	<bean id="studentAction" class="com.sfy.action.StudentAction">
+		<property name="studentService">
+			<ref bean="studentService" />
+		</property>
+	</bean>
+
+	<bean id="studentService" class="com.sfy.serviceimp.StudentServiceImp">
+		<property name="studentDao">
+			<ref bean="studentDao" />
+		</property>
+	</bean>
+
+	<bean id="studentDao" class="com.sfy.daoimp.StudentDaoImp">
+		<property name="jdbcTemplate">
+			<ref bean="jdbcTemplate" />
+		</property>
+	</bean>
+
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/test" />
+		<property name="username" value="root" />
+		<property name="password" value="root" />
+	</bean>
+
+	<!-- AOP -->
+
+	<bean id="transactionInterceptor"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
+		abstract="true">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+
+		<property name="transactionAttributes">
+			<props>
+				<prop key="delete*">PROPAGATION_REQUIRED</prop>
+				<prop key="reg*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+	</bean>
+
+</beans>
